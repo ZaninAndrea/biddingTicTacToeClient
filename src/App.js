@@ -65,9 +65,18 @@ class App extends Component {
         this.state.socket.on("game ended", result => {
             if (result === this.state.playingAs) {
                 alert("you won")
-            } else {
+            } else if (result === (this.state.playingAs === "X" ? "O" : "X")) {
                 alert("you lost")
+            } else if (result === "bidDraw") {
+                alert("draw due to 5 even bids")
+            } else if (result === "boardDraw") {
+                alert("draw due to 0 remaining possible tris")
             }
+        })
+
+        this.state.socket.on("bids even", () => {
+            console.log("even bids")
+            alert("your bids were even")
         })
     }
 
@@ -97,7 +106,7 @@ class App extends Component {
 
     bid() {
         this.state.socket.emit("bid", this.state.inputBid)
-        this.setState({inputBid: 0})
+        this.setState({inputBid: 0, playingState: "waiting"})
     }
 
     check(row, col) {
